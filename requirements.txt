@@ -1,12 +1,11 @@
 aiohttp
 beautifulsoup4
-cryptg # For Telethon 
+cryptg # For Telethon like 
 dnspython
 ffmpeg-python
 gitpython
 heroku3
-hachoir # for Telethon 
-loguru
+hachoir # for Telethon image processing
 lyricsgenius
 motor
 psutil
