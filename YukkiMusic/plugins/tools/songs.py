@@ -274,7 +274,7 @@ async def song_download_cb(event, _):
                 title=title,
             )
         except Exception as e:
-            return await mystic.edit(_["song_9"].format(e))
+            return await mystic.edit(_["song_9"].format(str(e)))
         await mystic.edit(_["song_11"])
 
         try:
