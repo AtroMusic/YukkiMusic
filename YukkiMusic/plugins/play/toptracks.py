@@ -113,8 +113,7 @@ async def server_to_play(event, _):
 
     try:
         details = await loop.run_in_executor(None, get_stats)
-    except Exception as e:
-        print(e)
+    except Exception:
         return
 
     try:
@@ -132,6 +131,6 @@ async def server_to_play(event, _):
     except Exception as e:
         ex_type = type(e).__name__
         err = e if ex_type == "AssistantErr" else _["general_3"].format(ex_type)
-        await mystic.edit(err)
+        await mystic.edit(str(err))
     else:
         await mystic.delete()
