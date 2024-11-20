@@ -57,7 +57,7 @@ class TeleAPI:
     async def get_filename(
         self, file: File, audio: Union[bool, str] = None
     ):
-            file_name = file.name or "Telegram audio file" if audio else "Telegram video file"
+        file_name = file.name or "Telegram audio file" if audio else "Telegram video file"
         return file_name
 
     async def get_duration(self, file: File): -> str:
