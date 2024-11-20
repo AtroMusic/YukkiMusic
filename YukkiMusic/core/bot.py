@@ -223,7 +223,7 @@ class YukkiBot(TelegramClient):
         return decorator
 
     async def get_participant(self, chat_id, user_id) -> ChannelParticipant:
-        result = await self(GetParticipantRequest(channel=chat_id, user_id=user_id))
+        result = await self(GetParticipantRequest(channel=chat_id, participant=user_id))
         return result.participant
 
     async def export_invite_link(self, chat_id) -> str:
