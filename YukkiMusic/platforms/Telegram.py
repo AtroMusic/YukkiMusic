@@ -152,7 +152,7 @@ class TeleAPI:
 
             try:
                 await app.download_media(
-                    event.reply_to_msg_id,
+                    await event.get_reply_message(),
                     file=fname,
                     progress_callback=progress,
                 )
