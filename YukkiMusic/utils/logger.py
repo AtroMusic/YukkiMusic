@@ -42,6 +42,6 @@ async def play_logs(event, streamtype):
                     logger_text,
                     link_preview=False,
                 )
-            except Exception as e:
-                print(e)
+            except Exception:
+                pass
         return
