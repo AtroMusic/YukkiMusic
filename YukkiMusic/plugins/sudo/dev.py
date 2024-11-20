@@ -102,51 +102,60 @@ async def forceclose_command(event):
 
 
 @app.on(events.MessageEdited(pattern=r"^/sh", func=lambda e: e.sender_id in SUDOERS))
-@app.on_message(
-    command=["sh"],
-    from_user=SUDOERS)
+@app.on_message(command="sh", from_user=SUDOERS)
 async def shellrunner(event):
-    if len(event.message.text.split()) < 2:
-        return await event.reply("<b>Give some commands like:</b>\n/sh git pull", parse_mode="html")
-    
-    text = event.message.text.split(" ", maxsplit=1)[1]
-    output = ""
-    
-    async def run_shell(command):
-        process = await asyncio.create_subprocess_shell(
-            command,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
+    if len(event.text.split()) < 2:
+        return await event.reply("<b>Give some commands like:</b>\n/sh git pull"
         )
-        stdout, stderr = await process.communicate()
-        return stdout.decode("utf-8"), stderr.decode("utf-8")
-    
-    if "\n" in text:
-        code = text.split("\n")
-        for x in code:
-            try:
-                stdout, stderr = await run_shell(x)
-                output += f"<b>{x}</b>\n{stdout if stdout else stderr}\n"
-            except Exception as err:
-                await event.reply(f"<b>ERROR :</b>\n<pre>{err}</pre>", parse_mode="html")
-                return
-    else:
+
+    text = event.text.split(None, 1)[1]
+    output = ""
+
+    async def run_command(command):
         try:
-            stdout, stderr = await run_shell(text)
-            output = stdout if stdout else stderr
+            process = await asyncio.create_subprocess_shell(
+                command,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            stdout, stderr = await process.communicate()
+            return stdout.decode().strip(), stderr.decode().strip()
         except Exception as err:
             exc_type, exc_obj, exc_tb = sys.exc_info()
-            errors = traceback.format_exception(etype=exc_type, value=exc_obj, tb=exc_tb)
-            await event.reply(f"<b>ERROR :</b>\n<pre>{''.join(errors)}</pre>", parse_mode="html")
-            return
-    
-    if output:
-        if len(output) > 4096:
-            with open("output.txt", "w+") as file:
-                file.write(output)
-            await app.send_file(event.chat_id, "output.txt", caption="<code>Output</code>", reply_to=event.message.id, parse_mode="html")
-            os.remove("output.txt")
-        else:
-            await event.reply(f"<b>OUTPUT :</b>\n<pre>{output}</pre>", parse_mode="html")
+            errors = traceback.format_exception(
+                etype=exc_type,
+                value=exc_obj,
+                tb=exc_tb,
+            )
+            return None, ''.join(errors)
+
+    if "\n" in text:
+        commands = text.split("\n")
+        for cmd in commands:
+            stdout, stderr = await run_command(cmd)
+            output += f"<b>Command:</b> {cmd}\n"
+            if stdout:
+                output += f"<b>Output:</b>\n<pre>{stdout}</pre>\n"
+            if stderr:
+                output += f"<b>Error:</b>\n<pre>{stderr}</pre>\n"
     else:
-        await event.reply("<b>OUTPUT :</b>\n<code>None</code>", parse_mode="html")
+        stdout, stderr = await run_command(text)
+        if stdout:
+            output += f"<b>Output:</b>\n<pre>{stdout}</pre>\n"
+        if stderr:
+            output += f"<b>Error:</b>\n<pre>{stderr}</pre>\n"
+
+    if not output.strip():
+        output = "<b>OUTPUT :</b>\n<code>None</code>"
+
+    if len(output) > 4096:
+        with open("output.txt", "w+") as file:
+            file.write(output)
+        await event.reply(
+            file"output.txt",
+            message="<code>Output</code>",
+            parss_mode="html",
+        )
+        os.remove("output.txt")
+    else:
+        await event.reply(output)
