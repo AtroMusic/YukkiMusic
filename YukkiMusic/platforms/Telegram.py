@@ -60,7 +60,7 @@ class TeleAPI:
         file_name = file.name or "Telegram audio file" if audio else "Telegram video file"
         return file_name
 
-    async def get_duration(self, file: File): -> str:
+    async def get_duration(self, file: File) -> str:
         try:
             duration = file.duration
             dur = seconds_to_min(duration) if duration is not None else "Unknown"
