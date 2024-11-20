@@ -32,7 +32,7 @@ def testspeed(m):
         result = test.results.dict()
         m = m.edit("↻ Sharing SpeedTest results")
     except Exception as e:
-        return m.edit(e)
+        return m.edit(str(e))
     return result
 
 
