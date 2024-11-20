@@ -177,7 +177,7 @@ async def import_database(event):
             mystic, "Data successfully imported from the provided file."
         )
     except Exception as e:
-        await edit_or_reply(mystic, f"Error during import: {e}\nRolling back changes.")
+        await edit_or_reply(mystic, f"Error during import: {str(e)}\nRolling back changes.")
 
     if os.path.exists(file_path):
         os.remove(file_path)
