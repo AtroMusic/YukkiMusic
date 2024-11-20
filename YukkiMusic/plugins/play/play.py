@@ -109,7 +109,7 @@ async def play_commnd(
                 else:
                     err = _["general_3"].format(ex_type)
                     LOGGER(__name__).error("An error occurred", exception=True)
-                return await mystic.edit(err)
+                return await mystic.edit(str(err))
             return await mystic.delete()
         return
     elif video_telegram:
@@ -156,7 +156,7 @@ async def play_commnd(
                 else:
                     LOGGER(__name__).error("An error occurred", exception=True)
                     err = _["general_3"].format(ex_type)
-                return await mystic.edit(err)
+                return await mystic.edit(str(err))
             return await mystic.delete()
         return
     elif url:
@@ -325,7 +325,7 @@ async def play_commnd(
                 else:
                     err = _["general_3"].format(ex_type)
                     LOGGER(__name__).error("An error occurred", exception=True)
-                return await mystic.edit(err)
+                return await mystic.edit(str(err))
             return await mystic.delete()
 
         elif await SoundCloud.valid(url):
@@ -360,7 +360,7 @@ async def play_commnd(
                 else:
                     LOGGER(__name__).error("An error occurred", exception=True)
                     err = _["general_3"].format(ex_type)
-                return await mystic.edit(err)
+                return await mystic.edit(str(err))
             return await mystic.delete()
         else:
             if not await Telegram.is_streamable_url(url):
@@ -387,7 +387,7 @@ async def play_commnd(
                 else:
                     LOGGER(__name__).error("An error occurred", exception=True)
                     err = _["general_3"].format(ex_type)
-                return await mystic.edit(err)
+                return await mystic.edit(str(err))
             return await play_logs(event, streamtype="M3u8 or Index Link")
     else:
         if len(event.text.split()) < 2:
@@ -450,7 +450,7 @@ async def play_commnd(
                 LOGGER(__name__).error("An error occurred", exception=True)
 
                 err = _["general_3"].format(ex_type)
-            return await mystic.edit(err)
+            return await mystic.edit(str(err))
         await mystic.delete()
         return await play_logs(event, streamtype=streamtype)
     else:
