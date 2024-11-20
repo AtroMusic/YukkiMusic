@@ -87,7 +87,7 @@ async def play_commnd(
                 "title": file_name,
                 "link": message_link,
                 "path": file_path,
-                "dur": dur,
+                "dur": duration_min,
             }
 
             try:
