@@ -60,11 +60,10 @@ async def play_commnd(
     fplay,
 ):
     mystic = await event.reply(_["play_2"].format(channel) if channel else _["play_1"])
-    r_msg, plist_id, slider, plist_type, spotify = None, None, None, None, None
+    video_telegram, audio_telegram, r_msg, plist_id, slider, plist_type, spotify = None, None, None, None, None, None, None
     sender = await event.get_sender()
     user_id = sender.id
-    user_name = f"[{sender.first_name}](tg://user?id={sender.id})"
-    video_telegram, audio_telegram = None, None
+    user_name = await app.create_mention(sender)
     if event.message.is_reply:
         r_msg = await event.get_reply_message()
 
@@ -82,7 +81,7 @@ async def play_commnd(
             )
         file_path = await Telegram.get_filepath(file)
         if await Telegram.download(_, event, mystic, file_path):
-            message_link = await Telegram.get_link(file)
+            message_link = await Telegram.get_link(event)
             file_name = await Telegram.get_filename(file, audio=True)
             details = {
                 "title": file_name,
@@ -116,7 +115,7 @@ async def play_commnd(
     elif video_telegram:
         if not await is_video_allowed(event.chat_id):
             return await mystic.edit(_["play_3"])
-        if event.reply_to.document:
+        if r_msg.document:
             try:
                 if file.ext.lower() not in formats:
                     return await mystic.edit(
@@ -128,7 +127,7 @@ async def play_commnd(
             return await mystic.edit(_["play_9"])
         file_path = await Telegram.get_filepath(file)
         if await Telegram.download(_, event, mystic, file_path):
-            message_link = await Telegram.get_link(file)
+            message_link = await Telegram.get_link(event)
             file_name = await Telegram.get_filename(video_telegram)
             dur = await Telegram.get_duration(video_telegram)
             details = {
