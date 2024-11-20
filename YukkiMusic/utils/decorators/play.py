@@ -147,31 +147,13 @@ def PlayWrapper(command):
             except:
                 pass
 
-        audio_telegram = (
-            (
-                event.reply_to.message.media.document
-                if event.reply_to.message.media
-                and event.reply_to.message.media.document.mime_type.startswith("audio/")
-                else None
-            )
-            if event.reply_to
-            else None
-        )
+        audio_telegram, video_telegram = None, None
+        if event.message.is_reply:
+            r_msg = await event.get_reply_message()
 
-        video_telegram = (
-            (
-                event.reply_to.message.media.document
-                if event.reply_to.message.media
-                and (
-                    event.reply_to.message.media.document.mime_type.startswith("video/")
-                    or event.reply_to.message.media.document.mime_type
-                    == "application/octet-stream"
-                )
-                else None
-            )
-            if event.reply_to
-            else None
-        )
+            audio_telegram = (r_msg.audio or r_msg.voice) if r_msg else None
+            video_telegram = (r_msg.video or r_msg.document) if r_msg else None
+
 
         url = await YouTube.url(event)
         if audio_telegram is None and video_telegram is None and url is None:
