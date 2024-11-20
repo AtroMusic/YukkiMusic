@@ -21,7 +21,7 @@ from config import lyrical
 
 from ..utils.formatters import convert_bytes, get_readable_time, seconds_to_min
 
-from YukkiMusic.logging import LOGGER
+from YukkiMusic import LOGGER, app
 
 from telethon import Button, events
 from telethon.tl.custom.message import Message
