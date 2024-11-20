@@ -21,6 +21,8 @@ from config import lyrical
 
 from ..utils.formatters import convert_bytes, get_readable_time, seconds_to_min
 
+from YukkiMusic.logging import LOGGER
+
 from telethon import Button, events
 from telethon.tl.custom.message import Message
 from telethon.tl.custom.file import File
@@ -160,7 +162,8 @@ class TeleAPI:
                     "Successfully downloaded... Processing file now",
                 )
                 downloader.pop(event.id, None)
-            except:
+            except Exception as e:
+                LOGGER(__name__).error("An error occurred", exc_info=True)
                 await mystic.edit(_["tg_2"])
 
             if len(downloader) > 10:
