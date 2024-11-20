@@ -64,13 +64,14 @@ async def play_commnd(
     sender = await event.get_sender()
     user_id = sender.id
     user_name = f"[{sender.first_name}](tg://user?id={sender.id})"
+    video_telegram, audio_telegram = None, None
     if event.message.is_reply:
         r_msg = await event.get_reply_message()
 
         audio_telegram = (r_msg.audio or r_msg.voice) if r_msg else None
-    video_telegram = (r_msg.video or r_msg.document) if r_msg else None
+        video_telegram = (r_msg.video or r_msg.document) if r_msg else None
 
-    file = r_msg.file
+        file = r_msg.file
     if audio_telegram:
         if file.duration > config.TG_AUDIO_FILESIZE_LIMIT:
             return await mystic.edit(_["play_5"])
@@ -79,10 +80,10 @@ async def play_commnd(
             return await mystic.edit(
                 _["play_6"].format(config.DURATION_LIMIT_MIN, duration_min)
             )
-        file_path = await Telegram.get_filepath(event)
+        file_path = await Telegram.get_filepath(file)
         if await Telegram.download(_, event, mystic, file_path):
-            message_link = await Telegram.get_link(event)
-            file_name = await Telegram.get_filename(event, audio=True)
+            message_link = await Telegram.get_link(file)
+            file_name = await Telegram.get_filename(file, audio=True)
             details = {
                 "title": file_name,
                 "link": message_link,
@@ -125,9 +126,9 @@ async def play_commnd(
                 return await mystic.edit(_["play_8"].format(f"{' | '.join(formats)}"))
         if video_telegram.file_size > config.TG_VIDEO_FILESIZE_LIMIT:
             return await mystic.edit(_["play_9"])
-        file_path = await Telegram.get_filepath(event)
+        file_path = await Telegram.get_filepath(file)
         if await Telegram.download(_, event, mystic, file_path):
-            message_link = await Telegram.get_link(event)
+            message_link = await Telegram.get_link(file)
             file_name = await Telegram.get_filename(video_telegram)
             dur = await Telegram.get_duration(video_telegram)
             details = {
