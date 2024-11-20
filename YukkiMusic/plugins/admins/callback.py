@@ -76,7 +76,8 @@ async def markup_panel(event):
 
 
 @app.on(events.CallbackQuery(pattern=r"MainMarkup (\S+)\|(\S+)"))
-async def del_back_playlist(event):
+@languageCB
+async def del_back_playlist(event, _):
     if event.sender_id in BANNED_USERS:
         return
     await event.answer()
@@ -84,9 +85,9 @@ async def del_back_playlist(event):
     videoid, chat_id = callback_data[1].split("|")
     chat_id = int(chat_id)
     buttons = (
-        telegram_markup(event, chat_id)
+        telegram_markup(_, chat_id)
         if videoid == "None"
-        else stream_markup(event, videoid, chat_id)
+        else stream_markup(_, videoid, chat_id)
     )
     try:
         await event.edit(buttons=buttons)
