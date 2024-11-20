@@ -7,25 +7,20 @@
 #
 # All rights reserved.
 
-import sys
-from loguru import logger
-from config import LOG_FILE_NAME
 import logging
+from logging.handlers import RotatingFileHandler
 
-logger.add(
-    LOG_FILE_NAME,
-    rotation="5 MB",
-    retention=10,
-    level="INFO",
-    format="{time:YYYY-MM-DD HH:mm:ss} - {level} - {name} - {message}",
-    serialize=False,
+from config import LOG_FILE_NAME
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="[%(asctime)s - %(levelname)s] - %(name)s - %(message)s",
+    datefmt="%d-%b-%y %H:%M:%S",
+    handlers=[
+        RotatingFileHandler(LOG_FILE_NAME, maxBytes=5000000, backupCount=10),
+        logging.StreamHandler(),
+    ],
 )
-
-"""logger.add(
-    sys.stdout,
-    level="INFO",
-    format="{time:YYYY-MM-DD HH:mm:ss} - {level} - {name} - {message}",
-)"""
 
 logging.getLogger("pyrogram").setLevel(logging.ERROR)
 logging.getLogger("telethon").setLevel(logging.ERROR)
@@ -36,5 +31,7 @@ logging.getLogger("httpx").setLevel(logging.ERROR)
 ntgcalls_logger = logger.bind(name="ntgcalls")
 ntgcalls_logger.level("CRITICAL")
 
-def LOGGER(name: str):
-    return logger.bind(name=name)
+
+
+def LOGGER(name: str) -> logging.Logger:
+    return logging.getLogger(name)
