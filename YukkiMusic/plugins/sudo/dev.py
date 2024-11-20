@@ -152,7 +152,7 @@ async def shellrunner(event):
         with open("output.txt", "w+") as file:
             file.write(output)
         await event.reply(
-            file"output.txt",
+            file="output.txt",
             message="<code>Output</code>",
             parss_mode="html",
         )
