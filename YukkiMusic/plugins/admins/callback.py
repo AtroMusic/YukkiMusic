@@ -22,7 +22,7 @@ from config import (
     adminlist,
     lyrical,
 )
-from YukkiMusic import Apple, Spotify, YouTube, app, LOGGER 
+from YukkiMusic import Apple, Spotify, YouTube, app
 from YukkiMusic.core.call import Yukki
 from YukkiMusic.misc import SUDOERS, db
 from YukkiMusic.utils import seconds_to_min, time_to_seconds
@@ -102,8 +102,8 @@ async def del_back_playlist(event, _):
 @languageCB
 async def del_back_playlist(event, _):
     await event.answer()
-    callback_data = event.data.decode("utf-8").split()
-    state, pages, videoid, chat_id = callback_data[1].split("|")
+    callback_data = event.data.decode("utf-8")
+    _, state, pages, videoid, chat_id = callback_data.split("|")
     pages = int(pages)
     chat_id = int(chat_id)
 
@@ -130,10 +130,8 @@ async def del_back_playlist(event, _):
 
     try:
         await event.edit(buttons=buttons)
-    except Exception as e:
-        LOGGER(__name__).error("An error occurred", exc_info=True)
+    except Exception:
         return
-
 
 @app.on(
     events.CallbackQuery(
