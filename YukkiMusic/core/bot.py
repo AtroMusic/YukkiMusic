@@ -99,7 +99,7 @@ class YukkiBot(TelegramClient):
         self.username = get_me.username
         self.id = get_me.id
         self.name = get_me.first_name + " " + (get_me.last_name or "")
-        self.mention = f"[{self.name}](tg://user?id={self.id})"
+        self.mention = await self.create_mention(get_me)
         try:
             await self.send_message(
                 config.LOG_GROUP_ID,
