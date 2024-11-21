@@ -6,6 +6,7 @@ ffmpeg-python
 gitpython
 heroku3
 hachoir # for Telethon image processing
+html2text
 lyricsgenius
 motor
 psutil
