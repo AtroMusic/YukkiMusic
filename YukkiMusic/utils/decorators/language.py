@@ -11,6 +11,7 @@ from strings import get_string
 from YukkiMusic.misc import SUDOERS
 from YukkiMusic.utils.database import get_lang, is_commanddelete_on, is_maintenance
 
+from config import BANNED_USERS
 
 def language(mystic):
     async def wrapper(event):
@@ -36,6 +37,8 @@ def language(mystic):
 
 def languageCB(mystic):
     async def wrapper(event):
+        if event.sender_id in BANNED_USERS:
+            return
         try:
             language = await get_lang(event.chat_id)
             language = get_string(language)
@@ -44,7 +47,7 @@ def languageCB(mystic):
         if not await is_maintenance():
             if event.sender_id not in SUDOERS:
                 if event.is_private:
-                    return event.answer(
+                    await event.answer(
                         language["maint_4"],
                         alert=True,
                     )
