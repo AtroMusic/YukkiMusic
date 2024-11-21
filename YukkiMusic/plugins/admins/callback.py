@@ -10,6 +10,7 @@
 import random
 
 from telethon import events
+import logging
 
 import config
 from config import (
@@ -87,7 +88,7 @@ async def handle_markup(event, _):
 @languageCB
 async def del_back_playlist(event, _):
     await event.answer()
-
+    logging.info(event.pattern_match.groups())
     state, pages, videoid, chat_id = (
         event.pattern_match.group(1),
         int(event.pattern_match.group(2)),
