@@ -87,10 +87,13 @@ async def handle_markup(event, _):
 @languageCB
 async def del_back_playlist(event, _):
     await event.answer()
-    callback_data = event.data.decode("utf-8")
-    _, state, pages, videoid, chat_id = callback_data.split("|")
-    pages = int(pages)
-    chat_id = int(chat_id)
+
+    state, pages, videoid, chat_id = (
+        event.pattern_match.group(1),
+        int(event.pattern_match.group(2)),
+        event.pattern_match.group(3),
+        int(event.pattern_match.group(4)),
+    )
 
     if state == "Forw":
         buttons = (
@@ -117,6 +120,7 @@ async def del_back_playlist(event, _):
         await event.edit(buttons=buttons)
     except Exception:
         return
+
 
 @app.on(
     events.CallbackQuery(
