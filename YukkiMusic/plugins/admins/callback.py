@@ -56,47 +56,32 @@ from YukkiMusic.utils.thumbnails import gen_thumb
 
 wrong = {}
 
-
 @app.on(events.CallbackQuery(pattern=r"PanelMarkup (\S+)\|(\S+)"))
-async def markup_panel(event):
-    if event.sender_id in BANNED_USERS:
-        return
-    await event.answer()
-    callback_data = event.data.decode("utf-8").split()
-    videoid, chat_id = callback_data[1].split("|")
-    chat_id = int(chat_id)
-    buttons = panel_markup_1(event, videoid, chat_id)
-    try:
-        await event.edit(buttons=buttons)
-    except Exception:
-        return
-    if chat_id not in wrong:
-        wrong[chat_id] = {}
-    wrong[chat_id][event.message_id] = False
-
-
 @app.on(events.CallbackQuery(pattern=r"MainMarkup (\S+)\|(\S+)"))
 @languageCB
-async def del_back_playlist(event, _):
-    if event.sender_id in BANNED_USERS:
-        return
+async def handle_markup(event, _):
     await event.answer()
-    callback_data = event.data.decode("utf-8").split()
-    videoid, chat_id = callback_data[1].split("|")
-    chat_id = int(chat_id)
-    buttons = (
-        telegram_markup(_, chat_id)
-        if videoid == "None"
-        else stream_markup(_, videoid, chat_id)
-    )
+    videoid, chat_id = event.pattern_match.group(1), int(event.pattern_match.group(2))
+
+    if "PanelMarkup" in event.data.decode("utf-8"):
+        buttons = panel_markup_1(_, videoid, chat_id)
+        value = False
+    elif "MainMarkup" in event.data.decode("utf-8"):
+        buttons = (
+            telegram_markup(_, chat_id)
+            if videoid == "None"
+            else stream_markup(_, videoid, chat_id)
+        )
+        value = True
+
     try:
         await event.edit(buttons=buttons)
     except Exception:
         return
+
     if chat_id not in wrong:
         wrong[chat_id] = {}
-    wrong[chat_id][event.message_id] = True
-
+    wrong[chat_id][event.message_id] = value
 
 @app.on(events.CallbackQuery(pattern=r"Pages (\S+)\|(\d+)\|(\S+)\|(\d+)"))
 @languageCB
@@ -140,9 +125,10 @@ async def del_back_playlist(event, _):
 )
 @languageCB
 async def del_back_playlist(event, _):
-    callback_data = event.data.decode("utf-8").strip()
-    command, chat_id_str = callback_data.split("|")
-    chat_id = int(chat_id_str)
+    command, chat_id = (
+        event.pattern_match.group(1),
+        int(event.pattern_match.group(2)),
+    )
 
     if not await is_active_chat(chat_id):
         return await event.answer(_["general_6"], alert=True)
