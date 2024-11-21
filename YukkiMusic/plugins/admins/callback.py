@@ -86,7 +86,7 @@ async def handle_markup(event, _):
 
 @app.on(events.CallbackQuery(pattern=r"Pages (\S+)\|(\d+)\|(\S+)\|(\d+)"))
 @languageCB
-async def del_back_playlist(event, _):
+async def pages(event, _):
     await event.answer()
     logging.info(event.pattern_match.groups())
     state, pages, videoid, chat_id = (
