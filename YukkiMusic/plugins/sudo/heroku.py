@@ -270,9 +270,13 @@ async def update_(event, _):
         "tsnrhtdd"[(format // 10 % 10 != 1) * (format % 10 < 4) * format % 10 :: 4],
     )
     updates = "".join(
-        f"<b>➣ #{info.count()}: <a href={REPO_}/commit/{info}>{info.summary}</a> By -> {info.author}</b>\n\t\t\t\t<b>➥ Commited On:</b> {ordinal(int(datetime.fromtimestamp(info.committed_date).strftime('%d')))} {datetime.fromtimestamp(info.committed_date).strftime('%b')}, {datetime.fromtimestamp(info.committed_date).strftime('%Y')}\n\n"
+        f"➣ **#{info.count()}**: [{info.summary}]({REPO_}/commit/{info}) By -> **{info.author}**\n"
+        f"        ➥ Committed On: {ordinal(int(datetime.fromtimestamp(info.committed_date).strftime('%d')))} "
+        f"{datetime.fromtimestamp(info.committed_date).strftime('%b')}, "
+        f"{datetime.fromtimestamp(info.committed_date).strftime('%Y')}\n\n"
         for info in repo.iter_commits(f"HEAD..origin/{config.UPSTREAM_BRANCH}")
     )
+
     _update_response_ = "**A new upadte is available for the Bot! **\n\n➣ Pushing upadtes Now\n\n__**Updates:**__\n"
     _final_updates_ = f"{_update_response_} {updates}"
 
