@@ -117,7 +117,7 @@ async def play_commnd(
             return await mystic.edit(_["play_3"])
         if r_msg.document:
             try:
-                if file.ext.lower() not in formats:
+                if file.ext.lower().split(".")[1] not in formats:
                     return await mystic.edit(
                         _["play_8"].format(f"{' | '.join(formats)}")
                     )
