@@ -94,16 +94,15 @@ class YukkiBot(TelegramClient):
 
     async def start(self):
         await super().start(bot_token=config.BOT_TOKEN)
-        self.parse_mode = "markdown"
-        self.get_me = await self.get_me()
-        self.username = self.get_me.username
-        self.id = self.get_me.id
-        self.name = self.get_me.first_name + " " + (self.get_me.last_name or "")
+        get_me = await self.get_me()
+        self.username = get_me.username
+        self.id = get_me.id
+        self.name = get_me.first_name + " " + (get_me.last_name or "")
         self.mention = await self.create_mention(get_me)
         try:
             await self.send_message(
                 config.LOG_GROUP_ID,
-                message=f"<u><b>{await self.create_mention(self.get_me, html = True)} Bot Started :</b><u>\n\nId : <code>{self.id}</code>\nName : {self.name}\nUsername : @{self.username}",
+                message=f"<u><b>{await self.create_mention(get_me, html = True)} Bot Started :</b><u>\n\nId : <code>{self.id}</code>\nName : {self.name}\nUsername : @{self.username}",
                 parse_mode="html",
             )
         except:
