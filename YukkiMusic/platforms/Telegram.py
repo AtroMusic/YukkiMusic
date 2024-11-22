@@ -142,12 +142,10 @@ class TeleAPI:
 **Percentage:** {percentage:.2f}%
 **Speed:** {speed}/s
 **Elapsed Time:** {eta}"""
-                    try:
-                        await mystic.edit(
+                   
+                    await mystic.edit(
                             message=text, buttons=upl
                         )
-                    except:
-                        pass
                     left_time[event.id] = datetime.now() + timedelta(seconds=self.sleep)
 
             speed_counter[event.id] = time.time()
