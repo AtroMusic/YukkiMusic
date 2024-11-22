@@ -240,17 +240,21 @@ class YukkiBot(TelegramClient):
         elif isinstance(entity, PeerChat) or hasattr(entity, "chat_id"):
             await self(DeleteChatUserRequest(entity.id, InputUserSelf()))
 
-    async def create_mention(self, user: User) -> str:
+    async def create_mention(self, user: User, html:bool =False) -> str:
         """
         Create a markdown mention for a given Telethon user.
 
         Args:
             user (User): A Telethon User object containing the user's details.
+            html (bool): If html is True return the html mention.
 
         Returns:
             str: A markdown formatted mention.
         """
         user_name = f"{user.first_name} {user.last_name or ''}".strip()
         user_id = user.id
-        mention = f"[{user_name}](tg://user?id={user_id})"
+        if html:
+            mention = f'<a href="tg://user?id={user_id}">{user_name}</a>'
+        else:
+            mention = f"[{user_name}](tg://user?id={user_id})"
         return mention
