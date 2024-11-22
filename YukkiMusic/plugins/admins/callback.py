@@ -84,17 +84,15 @@ async def handle_markup(event, _):
         wrong[chat_id] = {}
     wrong[chat_id][event.message_id] = value
 
-@app.on(events.CallbackQuery(pattern=r"Pages (\S+)\|(\d+)\|(\S+)\|(\d+)"))
+@app.on(events.CallbackQuery(pattern=r"Pages"))
 @languageCB
 async def pages(event, _):
     await event.answer()
-    logging.info(event.pattern_match.groups())
-    state, pages, videoid, chat_id = (
-        event.pattern_match.group(1),
-        int(event.pattern_match.group(2)),
-        event.pattern_match.group(3),
-        int(event.pattern_match.group(4)),
-    )
+    callback_data = event.data.decode("utf-8").strip()
+    callback_request = callback_data.split(None, 1)[1]
+    state, pages, videoid, chat = callback_request.split("|")
+    chat_id = int(chat)
+    pages = int(pages)
 
     if state == "Forw":
         buttons = (
