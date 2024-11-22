@@ -121,7 +121,8 @@ class TeleAPI:
                 current_time = time.time()
                 start_time = speed_counter.get(event.id)
                 check_time = current_time - start_time
-                upl = [Button.inline("🚦 Cancel Downloading", "stop_downloading")]
+                upl = [[Button.inline("🚦 Cancel Downloading", b"stop_downloading")]]
+
                 if datetime.now() > left_time.get(event.id):
                     percentage = current * 100 / total
                     speed = current / check_time
