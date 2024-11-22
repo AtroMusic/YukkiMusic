@@ -421,7 +421,7 @@ async def stream(
             position = len(db.get(chat_id)) - 1
             await app.send_message(
                 original_chat_id,
-                _["queue_4"].format(position, title[:30], duration_min, user_name),
+                _["queue_4"].format(position, title[:27], duration_min, user_name),
             )
         else:
             if not forceplay:
@@ -445,7 +445,7 @@ async def stream(
             run = await app.send_file(
                 original_chat_id,
                 file=config.TELEGRAM_VIDEO_URL if video else config.TELEGRAM_AUDIO_URL,
-                caption=_["stream_1"].format(title, link, duration_min, user_name),
+                caption=_["stream_1"].format(title[:27], link, duration_min, user_name),
                 buttons=button,
             )
             db[chat_id][0]["mystic"] = run
