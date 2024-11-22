@@ -144,7 +144,7 @@ class TeleAPI:
 **Elapsed Time:** {eta}"""
                    
                     await mystic.edit(
-                            message=text, buttons=upl
+                            text=text, buttons=upl
                         )
                     left_time[event.id] = datetime.now() + timedelta(seconds=self.sleep)
 
