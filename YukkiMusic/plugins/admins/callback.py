@@ -121,14 +121,10 @@ async def pages(event, _):
         return
 
 
-@app.on(
-    events.CallbackQuery(
-        pattern=r"ADMIN"
-    )
-)
+@app.on(events.CallbackQuery(pattern=r"ADMIN"))
 @languageCB
 async def del_back_playlist(event, _):
-    callback_data = event.data.decode("utf-8).strip()
+    callback_data = event.data.decode("utf-8").strip()
     callback_request = callback_data.split(None, 1)[1]
     command, chat = callback_request.split("|")
     chat_id = int(chat)
