@@ -123,15 +123,15 @@ async def pages(event, _):
 
 @app.on(
     events.CallbackQuery(
-        pattern=r"ADMIN (Pause|Resume|Stop|End|Mute|Unmute|Loop|Shuffle|Skip|Seek)\|(\d+)"
+        pattern=r"ADMIN"
     )
 )
 @languageCB
 async def del_back_playlist(event, _):
-    command, chat_id = (
-        event.pattern_match.group(1),
-        int(event.pattern_match.group(2)),
-    )
+    callback_data = event.data.decode("utf-8).strip()
+    callback_request = callback_data.split(None, 1)[1]
+    command, chat = callback_request.split("|")
+    chat_id = int(chat)
 
     if not await is_active_chat(chat_id):
         return await event.answer(_["general_6"], alert=True)
@@ -442,11 +442,13 @@ async def del_back_playlist(event, _):
         await mystic.edit(f"{string}\n\nChanges Done by: {mention} !")
 
 
-@app.on(events.CallbackQuery(pattern=r"MusicStream (\S+)\|(\S+)\|(\S+)\|(\S+)\|(\S+)"))
+@app.on(events.CallbackQuery(pattern=r"MusicStream"))
 @languageCB
 async def play_music(event, _):
     callback_data = event.data.decode("utf-8").strip()
-    _, videoid, user_id, mode, cplay, fplay = callback_data.split()
+    callback_request = callback_data.split(None, 1)[1]
+    vidid, user_id, mode, cplay, fplay = callback_request.split("|")
+    
     if event.sender_id != int(user_id):
         return await event.answer(_["playcb_1"], alert=True)
     try:
@@ -514,13 +516,21 @@ async def anonymous_check(event):
 
 @app.on(
     events.CallbackQuery(
-        pattern=r"YukkiPlaylists (\S+)\|(\S+)\|(\S+)\|(\S+)\|(\S+)\|(\S+)"
+        pattern=r"YukkiPlaylists"
     )
 )
 @languageCB
 async def play_playlists_command(event, _):
     callback_data = event.data.decode("utf-8").strip()
-    _, videoid, user_id, ptype, mode, cplay, fplay = callback_data.split()
+    callback_request = callback_data.split(None, 1)[1]
+    (
+        videoid,
+        user_id,
+        ptype,
+        mode,
+        cplay,
+        fplay,
+    ) = callback_request.split("|")
     if event.sender_id != int(user_id):
         return await event.answer(_["playcb_1"], alert=True)
     try:
@@ -576,12 +586,20 @@ async def play_playlists_command(event, _):
 
 
 @app.on(
-    events.CallbackQuery(pattern=r"slider (\S+)\|(\S+)\|(\S+)\|(\S+)\|(\S+)\|(\S+)")
+    events.CallbackQuery(pattern=r"slider")
 )
 @languageCB
 async def slider_queries(event, _):
     callback_data = event.data.decode("utf-8").strip()
-    _, what, rtype, query, user_id, cplay, fplay = callback_data.split("|")
+    callback_request = callback_data.split(None, 1)[1]
+    (
+        what,
+        rtype,
+        query,
+        user_id,
+        cplay,
+        fplay,
+    ) = callback_request.split("|")
 
     if event.sender_id != int(user_id):
         return await event.answer(_["playcb_1"], alert=True)
