@@ -95,7 +95,7 @@ class YukkiBot(TelegramClient):
     async def start(self):
         await super().start(bot_token=config.BOT_TOKEN)
         self.parse_mode = "markdown"
-        get_me = await self.get_me()
+        self.get_me = await self.get_me()
         self.username = get_me.username
         self.id = get_me.id
         self.name = get_me.first_name + " " + (get_me.last_name or "")
@@ -103,7 +103,7 @@ class YukkiBot(TelegramClient):
         try:
             await self.send_message(
                 config.LOG_GROUP_ID,
-                message=f"<u><b>{self.mention} Bot Started :</b><u>\n\nId : <code>{self.id}</code>\nName : {self.name}\nUsername : @{self.username}",
+                message=f"<u><b>{await self.create_mention(self.get_me, html = True)} Bot Started :</b><u>\n\nId : <code>{self.id}</code>\nName : {self.name}\nUsername : @{self.username}",
                 parse_mode="html",
             )
         except:
@@ -240,7 +240,7 @@ class YukkiBot(TelegramClient):
         elif isinstance(entity, PeerChat) or hasattr(entity, "chat_id"):
             await self(DeleteChatUserRequest(entity.id, InputUserSelf()))
 
-    async def create_mention(self, user: User, html:bool =False) -> str:
+    async def create_mention(self, user: User, html: bool = False) -> str:
         """
         Create a markdown mention for a given Telethon user.
 
