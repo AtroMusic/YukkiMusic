@@ -7,6 +7,7 @@
 #
 # All rights reserved.
 #
+from enum import Enum, auto
 
 from .Apple import Apple
 from .Carbon import Carbon
@@ -17,7 +18,16 @@ from .Spotify import Spotify
 from .Telegram import Telegram
 from .Youtube import YouTube
 
-
+class SourceType(Enum):
+    APPLE = auto()
+    RESSO = auto()
+    SAAVN = auto()
+    SOUNDCLOUD = auto()
+    SPOTIFY = auto()
+    TELEGRAM = auto()
+    YOUTUBE = auto()
+    
+    
 class PlaTForms:
     def __init__(self):
         self.apple = Apple()
@@ -28,3 +38,11 @@ class PlaTForms:
         self.spotify = Spotify()
         self.telegram = Telegram()
         self.youtube = YouTube()
+        
+    async def info(type: SourceType, *, **kwargs) -> dict: # todo implement all classes and there info function in this function using SourceType and **kwargs
+        pass
+        
+    async def download(type: SourceType, *, **kwargs) -> dict: #todo implement all downlod methdos in this download
+        pass
+
+    
