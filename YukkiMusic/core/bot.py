@@ -215,7 +215,7 @@ class YukkiBot(Client):
             except Exception:
                 pass
                 
-    def load_plugin(self, file_path: str, base_dir: str, utils=None):
+    def load_plugin(self, file_path: str, base_dir: str, attrs: dict):
         file_name = os.path.basename(file_path)
         module_name, ext = os.path.splitext(file_name)
         if module_name.startswith("__") or ext != ".py":
@@ -229,9 +229,8 @@ class YukkiBot(Client):
         module.logger = LOGGER(module_path)
         module.app = self
         module.Config = config
-
-        if utils:
-            module.utils = utils
+        for name, attr in attrs.items():
+            setattr(module, name, attr)
 
         try:
             spec.loader.exec_module(module)
@@ -242,7 +241,7 @@ class YukkiBot(Client):
 
         return module
 
-    def load_plugins_from(self, base_folder: str):
+    def load_plugins_from(self, base_folder: str, attrs: dict):
         base_dir = os.path.abspath(base_folder)
         utils_path = os.path.join(base_dir, "utils.py")
         utils = None
@@ -255,11 +254,13 @@ class YukkiBot(Client):
             except Exception as e:
                 LOGGER(__name__).error(f"Failed to load 'utils' module: {e}", exc_info = True)
 
+        if utils:
+            attrs["utils"] = utils
         for root, _, files in os.walk(base_dir):
             for file in files:
                 if file.endswith(".py") and not file == "utils.py":
                     file_path = os.path.join(root, file)
-                    mod = self.load_plugin(file_path, base_dir, utils)
+                    mod = self.load_plugin(file_path, base_dir, attrs)
                     yield mod
 
     async def run_shell_command(self, command: list):
