@@ -40,7 +40,8 @@ async def init():
     except Exception:
         pass
     await app.start()
-    for mod in app.load_plugins_from("YukkiMusic/plugins"):
+    attrs = {"userbot": userbot}
+    for mod in app.load_plugins_from("YukkiMusic/plugins", attrs):
         if mod and hasattr(mod, "__MODULE__") and mod.__MODULE__:
             if hasattr(mod, "__HELP__") and mod.__HELP__:
                 HELPABLE[mod.__MODULE__.lower()] = mod
@@ -63,7 +64,7 @@ async def init():
             if result["returncode"] != 0:
                 logger.error(f"Error installing requirements: {result['stderr']}")
                     
-        for mod in app.load_plugins_from("xtraplugins"):
+        for mod in app.load_plugins_from("xtraplugins", attrs):
             if mod and hasattr(mod, "__MODULE__") and mod.__MODULE__:
                 if hasattr(mod, "__HELP__") and mod.__HELP__:
                     HELPABLE[mod.__MODULE__.lower()] = mod
